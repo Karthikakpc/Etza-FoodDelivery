@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Restaurant</title>
+</head>
+<body>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <label>Restaurant name</label><br>
+        <input type="text" name="restaurant_name"><br><br>
+
+        <label>Picture url</label><br>
+        <input type="text" name="picture_url"><br><br>
+
+        <label>Cuisine</label><br>
+        <input type="text" name="cuisine"><br><br>
+
+        <label>Rating</label><br>
+        <input type="text" name="rating"><br><br>
+
+        <button type="submit">Add Restaurant</button>
+    </form>
+
+</body>
+</html>
