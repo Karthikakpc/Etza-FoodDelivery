@@ -1,45 +1,87 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <title>ETZA | Menu</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+
+    <link rel="stylesheet" href="{% static 'css/customer_menu.css' %}">
 </head>
 <body>
-    <h3>Welcome {{username}}!</h3>
+{% if request.GET.added %}
+<div class="cart-popup-overlay" id="cartPopup">
+    <div class="cart-popup">
+        <h3>✅ Added to cart successfully</h3>
 
-    <a href="{% url 'show_cart' username %}" > Go to cart</a>
+        <div class="popup-actions">
+            <a href="{% url 'show_cart' username %}" class="popup-btn primary">
+                🛒 Go to Cart
+            </a>
+            <button onclick="closePopup()" class="popup-btn secondary">
+                Continue Browsing
+            </button>
+        </div>
+    </div>
+</div>
+{% endif %}
 
-    <!-- show current menu -->
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Item name</th>
-                <th>Picture</th>
-                <th>Description</th>
-                <th>Price</th>
-                <th>Is veg?</th>
-                <th>Operation</th>
-            </tr>
-        </thead>
-        <tbody>
-            {%  for item in itemList %}
-                <tr>
-                    <td>{{ item.name }}</td>
-                    <td>
-                        <img src="{{ item.picture }}" width="120" height="80">
-                    </td>
-                    <td>{{ item.description }}</td>
-                    <td>{{ item.price }}</td>
-                    <td>{{ item.vegeterian }}</td>
-                    <td>
-                        <a href="{% url 'add_to_cart' item.id username %}">
-                            Add to cart
-                        </a>
-                    </td>
-                </tr>
+<section class="menu-hero">
+    <div class="overlay"></div>
+
+    <!-- TOP BAR -->
+    <div class="top-bar">
+        <h2>Welcome {{ username }} 👋</h2>
+
+        <a href="{% url 'show_cart' username %}" class="cart-btn">
+            🛒 View Cart
+        </a>
+    </div>
+
+    <div class="container">
+        <h3 class="restaurant-title">{{ restaurant.name }}</h3>
+
+        <div class="menu-grid">
+            {% for item in itemList %}
+            <div class="menu-card">
+
+                <div class="image-box">
+                    <img src="{{ item.picture }}" alt="{{ item.name }}">
+                </div>
+
+                <div class="card-content">
+                    <h4>{{ item.name }}</h4>
+                    <p class="description">{{ item.description }}</p>
+
+                    <div class="meta">
+                        <span class="price">₹{{ item.price }}</span>
+
+                        {% if item.vegeterian %}
+                            <span class="veg">● Veg</span>
+                        {% else %}
+                            <span class="non-veg">● Non-Veg</span>
+                        {% endif %}
+                    </div>
+
+                    <a href="{% url 'add_to_cart' item.id username %}" class="btn-add">
+                        Add to Cart
+                    </a>
+                </div>
+
+            </div>
+            {% empty %}
+            <p style="color:white;">No items available.</p>
             {% endfor %}
-        </tbody>
-    </table>
+        </div>
+    </div>
+</section>
+<script>
+function closePopup() {
+    const popup = document.getElementById("cartPopup");
+    if (popup) popup.style.display = "none";
+}
+</script>
+
 </body>
 </html>

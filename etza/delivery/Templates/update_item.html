@@ -1,0 +1,155 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Menu Item</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Font -->
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: #0e0e0e;
+            font-family: 'Poppins', sans-serif;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 520px;
+            background: #161616;
+            padding: 32px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+        }
+
+        h2 {
+            margin: 0 0 6px;
+            font-size: 26px;
+        }
+
+        .subtitle {
+            color: #aaa;
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 13px;
+            color: #bbb;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            background: #0f0f0f;
+            border: 1px solid #2a2a2a;
+            border-radius: 14px;
+            padding: 12px 14px;
+            color: #fff;
+            font-size: 14px;
+            margin-bottom: 18px;
+        }
+
+        textarea {
+            min-height: 90px;
+            resize: none;
+        }
+
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #ffc107;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .veg-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 24px;
+            color: #ccc;
+            font-size: 14px;
+        }
+
+        .btn {
+            width: 100%;
+            background: #ffc107;
+            border: none;
+            padding: 14px;
+            border-radius: 24px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            color: #000;
+        }
+
+        .btn:hover {
+            background: #ffb703;
+        }
+
+        @media (max-width: 600px) {
+            .row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+
+    <h2>Update Menu Item</h2>
+    <p class="subtitle">Modify item details professionally</p>
+
+    <form method="post" action="{% url 'update_item' item.id %}">
+        {% csrf_token %}
+
+        <label>Name</label>
+        <input type="text" name="name" value="{{ item.name }}" required>
+
+        <label>Description</label>
+        <textarea name="description" required>{{ item.description }}</textarea>
+
+        <div class="row">
+            <div>
+                <label>Price</label>
+                <input type="number" name="price" step="0.01" value="{{ item.price }}" required>
+            </div>
+
+            <div>
+                <label>Image URL</label>
+                <input type="url" name="picture" value="{{ item.picture }}" required>
+            </div>
+        </div>
+
+        <div class="veg-row">
+            <input type="checkbox" name="vegeterian" {% if item.vegeterian %}checked{% endif %}>
+            Vegetarian
+        </div>
+
+        <button type="submit" class="btn">
+            ✅ Update Item
+        </button>
+    </form>
+
+</div>
+
+</body>
+</html>

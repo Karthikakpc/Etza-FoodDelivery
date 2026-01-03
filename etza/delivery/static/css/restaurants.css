@@ -1,0 +1,154 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    color: #fff;
+}
+
+/* BACKGROUND */
+.restaurant-hero {
+    min-height: 100vh;
+    background: url("../images/bg-food.jpg") center/cover no-repeat;
+    position: relative;
+}
+
+.overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.85));
+    backdrop-filter: blur(10px);
+    z-index: 1;
+}
+
+/* CONTAINER */
+.container {
+    position: relative;
+    z-index: 2;
+    padding: 60px 80px;
+}
+
+.page-title {
+    font-size: 32px;
+    margin-bottom: 40px;
+}
+
+/* GRID */
+.restaurant-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    justify-items: center;
+}
+
+/* CARD */
+.restaurant-card {
+    width: 100%;
+    max-width: 340px;          /* 🔥 KEY: stops long banner cards */
+    background: rgba(0,0,0,0.65);
+    backdrop-filter: blur(12px);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+    transition: transform 0.3s ease;
+}
+
+.restaurant-card:hover {
+    transform: translateY(-6px);
+}
+
+/* IMAGE */
+.image-box {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+}
+
+.image-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* CONTENT */
+.card-content {
+    padding: 18px;
+}
+
+.card-content h3 {
+    font-size: 18px;
+    margin-bottom: 6px;
+}
+
+.cuisine {
+    font-size: 13px;
+    color: #ccc;
+    margin-bottom: 12px;
+}
+
+/* RATING */
+.rating {
+    margin-bottom: 16px;
+}
+
+.star {
+    color: #555;
+    font-size: 18px;
+}
+
+.star.filled {
+    color: #ffc107;
+}
+
+/* BUTTON */
+.btn-view {
+    display: inline-block;
+    padding: 10px 22px;
+    border-radius: 30px;
+    background: linear-gradient(135deg,#ffc107,#ff9800);
+    color: #000;
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+/* MOBILE */
+@media (max-width: 600px) {
+    .container {
+        padding: 40px 20px;
+    }
+
+    .restaurant-card {
+        max-width: 100%;
+    }
+}
+/* FORCE IMAGE TO SHOW */
+.image-box {
+    width: 100%;
+    height: 160px;        /* REQUIRED */
+    overflow: hidden;
+    border-radius: 14px;
+    margin-bottom: 14px;
+}
+
+.image-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;   /* MOST IMPORTANT */
+    display: block;
+}
+/* ADMIN BUTTON PLACEMENT FIX ONLY */
+.admin-btn-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.admin-btn-single {
+    margin-top: 10px;
+}

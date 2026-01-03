@@ -1,40 +1,59 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <title>ETZA | Restaurants</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Customer Page</title>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+
+    <link rel="stylesheet" href="{% static 'css/customer_home.css' %}">
 </head>
 <body>
-    <h3>Welcome {{username}}!</h3>
 
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Restaurant name</th>
-                <th>Picture</th>
-                <th>Cuisine</th>
-                <th>Rating</th>
-                <th>Operations</th>
-            </tr>
-        </thead>
-        <tbody>
-            {%  for r in restaurantList %}
-                <tr>
-                    <td>{{ r.name }}</td>
-                    <td>
-                       <img src="{{ r.picture }}" width="120" height="80">
-                    </td>
-                    <td>{{ r.cuisine }}</td>
-                    <td>{{ r.rating }}</td>
-                    <td>
-                        <a href="">
-                        <a href="{% url 'view_menu' r.id username %}">
-                            View Menu
-                        </a>
-                    </td>
-                </tr>
+<section class="restaurant-hero">
+    <div class="overlay"></div>
+
+    <div class="container">
+
+        <h2 class="page-title">Welcome {{ username }} 👋</h2>
+        <p class="subtitle">Discover restaurants near you</p>
+
+        <div class="restaurant-grid">
+            {% for restaurant in restaurantList %}
+            <div class="restaurant-card">
+
+                <div class="image-box">
+                    <img src="{{ restaurant.picture }}" alt="{{ restaurant.name }}">
+                </div>
+
+                <div class="card-content">
+                    <h3>{{ restaurant.name }}</h3>
+                    <p class="cuisine">{{ restaurant.cuisine }}</p>
+
+                    <div class="rating">
+                        {% for i in "12345" %}
+                            {% if forloop.counter <= restaurant.rating %}
+                                <span class="star filled">★</span>
+                            {% else %}
+                                <span class="star">★</span>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+
+                    <a href="{% url 'view_menu' restaurant.id username %}" class="btn-view">
+                        View Menu
+                    </a>
+                </div>
+
+            </div>
+            {% empty %}
+            <p style="color:white;">No restaurants available.</p>
             {% endfor %}
-        </tbody>
-    </table>
+        </div>
+
+    </div>
+</section>
+
 </body>
+</html>

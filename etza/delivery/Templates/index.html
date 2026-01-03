@@ -1,18 +1,66 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Welcome page</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <meta charset="UTF-8">
+    <title>ETZA | Just Order It</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/landing.css' %}">
 </head>
 <body>
 
-<h3>Welcome to Etza!</h3>
+<section class="hero">
 
-<br>
-<a href="open_signin">SIGN IN</a>
-<br>
-<a href="open_signup">SIGN UP</a>
+    <div class="overlay"></div>
 
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="brand">
+            <div class="logo-wrapper">
+                <img src="{% static 'images/logo2.png' %}" alt="ETZA Logo" class="logo-img">
+            </div>
+        </div>
+
+        <div class="nav-actions">
+            <a href="{% url 'auth' %}">Sign In</a>
+            <a href="{% url 'auth' %}?mode=signup" class="btn-outline">Sign Up</a>
+        </div>
+    </nav>
+
+    <!-- HERO CONTENT -->
+    <div class="hero-content">
+
+        <!-- LEFT -->
+        <div class="hero-text">
+            <h1>
+                Order <span>Tasty & Fresh</span><br>
+                Food Anytime.
+            </h1>
+
+            <p>
+                No matter where you are or whom you are with,
+                <strong>ETZA</strong> takes care of what you crave.
+            </p>
+
+            <div class="hero-buttons">
+                <a href="{% url 'auth' %}" class="btn-primary">Order Now</a>
+                <a href="{% url 'auth' %}?mode=signup" class="btn-secondary">Join ETZA</a>
+            </div>
+        </div>
+
+        <!-- RIGHT IMAGE -->
+        <div class="hero-visual">
+            <div class="image-frame">
+                <img src="{% static 'images/girl.png' %}" class="hero-img active" id="img1">
+                <img src="{% static 'images/family.jpeg' %}" class="hero-img" id="img2">
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<script src="{% static 'js/landing.js' %}"></script>
 </body>
 </html>

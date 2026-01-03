@@ -1,32 +1,88 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Update Restaurant</title>
+    <title>ETZA | Update Restaurant</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- GLOBAL BASE -->
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <!-- PAGE CSS -->
+    <link rel="stylesheet" href="{% static 'css/update_restaurant.css' %}">
 </head>
 <body>
 
-    <form action="{% url 'update_restaurant' restaurant.id %}" method="post">
-        {% csrf_token %}
+<section class="admin-hero">
+    <div class="overlay"></div>
 
-        <label>Restaurant name</label>
-        <input type="text" name="name" value="{{ restaurant.name }}">
-        <br><br>
+    <div class="admin-container">
 
-        <label>Picture url</label>
-        <input type="text" name="picture" value="{{ restaurant.picture }}">
-        <br><br>
+        <div class="admin-card">
 
-        <label>Cuisine</label>
-        <input type="text" name="cuisine" value="{{ restaurant.cuisine }}">
-        <br><br>
+            <h1>Update Restaurant</h1>
+            <p class="subtitle">Modify restaurant details</p>
 
-        <label>Rating</label>
-        <input type="number" name="rating" min="0" max="5" step="0.5" value="{{ restaurant.rating }}">
-        <br><br>
+            <form method="post" action="{% url 'update_restaurant' restaurant.id %}">
+                {% csrf_token %}
 
-        <button type="submit">Update Restaurant</button>
-    </form>
+                <div class="form-group">
+                    <label>Restaurant Name</label>
+                    <input
+                        type="text"
+                        name="name"
+                        value="{{ restaurant.name }}"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label>Picture URL</label>
+                    <input
+                        type="url"
+                        name="picture"
+                        value="{{ restaurant.picture }}"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label>Cuisine</label>
+                    <input
+                        type="text"
+                        name="cuisine"
+                        value="{{ restaurant.cuisine }}"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label>Rating (0 – 5)</label>
+                    <input
+                        type="number"
+                        name="rating"
+                        step="0.5"
+                        min="0"
+                        max="5"
+                        value="{{ restaurant.rating }}"
+                        required
+                    >
+                </div>
+
+                <button type="submit" class="admin-btn primary">
+                    ✅ Update Restaurant
+                </button>
+            </form>
+
+            <!-- BACK LINK AT BOTTOM -->
+            <a href="{% url 'open_show_restaurant' %}" class="back-bottom">
+                ← Back to Restaurants
+            </a>
+
+        </div>
+
+    </div>
+</section>
 
 </body>
 </html>
