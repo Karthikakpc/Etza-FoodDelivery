@@ -8,22 +8,54 @@ body {
 
 /* HERO */
 .restaurant-hero {
+    position: relative;
     min-height: 100vh;
     background: url("../images/bg-food.jpg") center/cover no-repeat;
-    position: relative;
+    overflow: hidden;
 }
 
-.overlay {
+/* OVERLAY */
+.restaurant-hero .overlay {
     position: absolute;
     inset: 0;
     background: linear-gradient(rgba(0,0,0,.75), rgba(0,0,0,.85));
     backdrop-filter: blur(10px);
+    z-index: 1;
 }
 
-.container {
+/* FORCE CONTENT ABOVE OVERLAY */
+.restaurant-hero * {
     position: relative;
     z-index: 2;
-    padding: clamp(30px, 6vw, 80px);
+}
+
+/* VIEW CART */
+.view-cart-btn {
+    position: absolute;
+    top: 28px;
+    right: 28px;
+
+    z-index: 9999;
+    background: #ffc107;
+    color: #000;
+    padding: 12px 22px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 16px;
+    text-decoration: none;
+
+    box-shadow: 0 12px 30px rgba(0,0,0,0.45);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.view-cart-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 18px 40px rgba(0,0,0,0.6);
+}
+
+/* CONTAINER */
+.container {
+    padding: 120px clamp(20px, 6vw, 80px) 80px;
 }
 
 /* GRID */
@@ -73,9 +105,29 @@ body {
     text-decoration: none;
 }
 
+/* ⭐ STAR RATING (THIS IS THE FIX) */
+.rating {
+    display: flex;
+    gap: 4px;
+    margin: 8px 0;
+}
+
+.rating .star {
+    font-size: 16px;
+    color: #555;              /* unfilled star */
+}
+
+.rating .star.filled {
+    color: #ffc107;           /* GOLD STAR */
+    text-shadow: 0 0 6px rgba(255,193,7,0.6);
+}
+
 /* MOBILE */
 @media (max-width: 600px) {
-    .container {
-        padding: 24px 16px;
+    .view-cart-btn {
+        top: 16px;
+        right: 16px;
+        padding: 10px 16px;
+        font-size: 14px;
     }
 }

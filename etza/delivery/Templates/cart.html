@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <title>ETZA | Your Cart</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'css/base.css' %}">
 
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <link rel="stylesheet" href="{% static 'css/cart.css' %}">
 </head>
 <body>
@@ -17,14 +17,12 @@
     <!-- TOP BAR -->
     <div class="top-bar">
         <h2>Hello {{ username }} 👋</h2>
-
         <a href="{% url 'checkout' username %}" class="checkout-btn">
             Proceed to Checkout
         </a>
     </div>
 
     <div class="container">
-
         <h3 class="page-title">Your Cart</h3>
 
         <div class="cart-layout">
@@ -47,9 +45,18 @@
                         ₹{{ item.price }}
                     </div>
 
+                    <form method="POST"
+                          action="{% url 'remove_from_cart' item.id username %}"
+                          class="delete-form">
+                        {% csrf_token %}
+                        <button type="button" class="delete-btn">
+                            ✕
+                        </button>
+                    </form>
+
                 </div>
                 {% empty %}
-                <p style="color:white;">Your cart is empty.</p>
+                <p>Your cart is empty.</p>
                 {% endfor %}
             </div>
 
@@ -70,6 +77,52 @@
         </div>
     </div>
 </section>
+
+<!-- DELETE CONFIRM MODAL -->
+<div id="deleteModal" class="delete-modal">
+    <div class="delete-modal-content">
+        <h3>Remove item?</h3>
+        <p>Are you sure you want to remove this item from your cart?</p>
+
+        <div class="modal-actions">
+            <button class="cancel-btn" type="button">Cancel</button>
+            <button class="confirm-btn" type="button">Remove</button>
+        </div>
+    </div>
+</div>
+
+<script>
+let deleteForm = null;
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    document.querySelectorAll(".delete-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            deleteForm = btn.closest("form");
+            document.getElementById("deleteModal").classList.add("active");
+            document.body.style.overflow = "hidden";
+        });
+    });
+
+    document.querySelector(".cancel-btn").addEventListener("click", closeModal);
+    document.querySelector(".delete-modal").addEventListener("click", closeModal);
+
+    document.querySelector(".delete-modal-content")
+        .addEventListener("click", e => e.stopPropagation());
+
+    document.querySelector(".confirm-btn").addEventListener("click", () => {
+        if (deleteForm) {
+            deleteForm.submit();
+        }
+    });
+});
+
+function closeModal() {
+    document.getElementById("deleteModal").classList.remove("active");
+    document.body.style.overflow = "";
+    deleteForm = null;
+}
+</script>
 
 </body>
 </html>

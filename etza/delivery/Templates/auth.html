@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <title>ETZA | Authentication</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'css/base.css' %}">
 
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <link rel="stylesheet" href="{% static 'css/auth.css' %}">
 </head>
 <body>
@@ -22,13 +22,12 @@
 
         <div class="nav-actions">
             <button id="navSignIn" class="nav-link {% if mode != 'signup' %}active{% endif %}">
-             Sign In
+                Sign In
             </button>
 
             <button id="navSignUp" class="nav-link {% if mode == 'signup' %}active{% endif %}">
-             Sign Up
+                Sign Up
             </button>
-
         </div>
     </nav>
 
@@ -36,11 +35,21 @@
     <div class="auth-container">
         <div class="auth-card">
 
-            <!-- SIGN IN -->
-           <div class="auth-panel sign-in {% if mode != 'signup' %}active{% endif %}">
+            <!-- ================= SIGN IN ================= -->
+            <div class="auth-panel sign-in {% if mode != 'signup' %}active{% endif %}">
 
                 <h2>Welcome Back</h2>
                 <p>Sign in to continue</p>
+
+                <!-- SIGN IN ERROR -->
+                {% if error and mode != 'signup' %}
+                    <p class="error-msg">{{ error }}</p>
+                {% endif %}
+
+                <!-- SIGN IN SUCCESS -->
+                {% if success %}
+                    <p class="success-msg">{{ success }}</p>
+                {% endif %}
 
                 <form method="post" action="{% url 'signin' %}">
                     {% csrf_token %}
@@ -56,11 +65,16 @@
                 </p>
             </div>
 
-            <!-- SIGN UP -->
+            <!-- ================= SIGN UP ================= -->
             <div class="auth-panel sign-up {% if mode == 'signup' %}active{% endif %}">
 
                 <h2>Create Account</h2>
                 <p>Join ETZA today</p>
+
+                <!-- SIGN UP ERROR -->
+                {% if error and mode == 'signup' %}
+                    <p class="error-msg">{{ error }}</p>
+                {% endif %}
 
                 <form method="post" action="{% url 'signup' %}">
                     {% csrf_token %}

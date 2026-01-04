@@ -9,7 +9,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const switchToSignUp = document.getElementById("switchToSignUp");
     const switchToSignIn = document.getElementById("switchToSignIn");
 
-    /* SAFETY CHECK */
     if (!signInPanel || !signUpPanel) return;
 
     /* ------------------------------
@@ -33,7 +32,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     /* ------------------------------
-       TOGGLE BUTTONS
+       USER ACTIONS ONLY
+       (NO AUTO SWITCH ON LOAD)
     ------------------------------ */
 
     navSignIn.addEventListener("click", showSignIn);
@@ -42,16 +42,6 @@ document.addEventListener("DOMContentLoaded", function () {
     switchToSignUp.addEventListener("click", showSignUp);
     switchToSignIn.addEventListener("click", showSignIn);
 
-    /* ------------------------------
-       AUTO MODE FROM URL
-    ------------------------------ */
-
-    const params = new URLSearchParams(window.location.search);
-    const mode = params.get("mode");
-
-    if (mode === "signup") {
-        showSignUp();
-    } else {
-        showSignIn(); // default
-    }
+    // ❌ REMOVED AUTO MODE LOGIC
+    // Django template controls initial state using `mode`
 });

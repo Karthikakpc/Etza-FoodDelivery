@@ -13,14 +13,9 @@
 
 <section class="hero">
 
-    <div class="overlay"></div>
-
-    <!-- NAVBAR -->
     <nav class="navbar">
         <div class="brand">
-            <div class="logo-wrapper">
-                <img src="{% static 'images/logo2.png' %}" alt="ETZA Logo" class="logo-img">
-            </div>
+            <img src="{% static 'images/logo2.png' %}" class="logo-img">
         </div>
 
         <div class="nav-actions">
@@ -29,16 +24,12 @@
         </div>
     </nav>
 
-    <!-- HERO CONTENT -->
     <div class="hero-content">
-
-        <!-- LEFT -->
         <div class="hero-text">
             <h1>
                 Order <span>Tasty & Fresh</span><br>
                 Food Anytime.
             </h1>
-
             <p>
                 No matter where you are or whom you are with,
                 <strong>ETZA</strong> takes care of what you crave.
@@ -50,12 +41,50 @@
             </div>
         </div>
 
-        <!-- RIGHT IMAGE -->
         <div class="hero-visual">
             <div class="image-frame">
-                <img src="{% static 'images/girl.png' %}" class="hero-img active" id="img1">
-                <img src="{% static 'images/family.jpeg' %}" class="hero-img" id="img2">
+                <img src="{% static 'images/girl1.png' %}" class="hero-img active" id="img1">
+                <img src="{% static 'images/fam2.png' %}" class="hero-img" id="img2">
             </div>
+        </div>
+    </div>
+</section>
+
+<section class="etza-bottom">
+    <div class="etza-bottom-content">
+
+        <h2 class="bottom-title">Our Most Loved Restaurants</h2>
+        <p class="bottom-sub">
+            Crafted by passion. Rated by food lovers.
+            Discover places where every bite tells a story.
+        </p>
+
+        <div class="restaurant-carousel">
+            {% for restaurant in top_restaurants %}
+            <a href="{% url 'auth' %}" class="restaurant-card">
+
+                <div class="restaurant-img">
+                    <img src="{{ restaurant.picture }}" alt="{{ restaurant.name }}">
+                </div>
+
+                <div class="restaurant-info">
+                    <h3>{{ restaurant.name }}</h3>
+
+                    <div class="stars">
+                        {% for i in "12345" %}
+                            <span class="{% if restaurant.rating >= forloop.counter %}filled{% endif %}">★</span>
+                        {% endfor %}
+                        <small>{{ restaurant.rating }}</small>
+                    </div>
+                </div>
+
+            </a>
+            {% endfor %}
+        </div>
+
+        <div class="etza-closing">
+            ETZA is not just food delivery —
+            it’s where flavors meet feelings and moments turn into memories.
         </div>
 
     </div>

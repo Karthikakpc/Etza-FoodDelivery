@@ -6,16 +6,34 @@ from .models import User, Restaurant, Item, Cart
 import razorpay
 from django.conf import settings
 
-# Create your views here.
 def index(request):
-    return render(request, 'index.html')
+    top_restaurants = Restaurant.objects.order_by('-rating')[:4]
+    return render(request, 'index.html', {
+        'top_restaurants': top_restaurants
+    })
+
 
 def auth(request):
     mode = request.GET.get("mode", "signin")
-    return render(request, 'auth.html', {
-        "mode": mode
-    })
 
+    error = None
+    success = None
+
+    # Handle errors from redirects
+    if request.GET.get("error") == "invalid":
+        error = "Invalid username or password"
+
+    if request.GET.get("error") == "duplicate":
+        error = "User already exists with this mobile number"
+
+    if request.GET.get("success"):
+        success = "Account created successfully. Please sign in."
+
+    return render(request, 'auth.html', {
+        "mode": mode,
+        "error": error,
+        "success": success
+    })
 
 
 from django.shortcuts import render, redirect
@@ -38,31 +56,38 @@ def signin(request):
             })
 
         except User.DoesNotExist:
-            return render(request, 'fail.html')
+            # 🔴 redirect with error flag
+            return redirect('/auth?error=invalid')
 
     return redirect('/auth')
-
 
         
     
 def signup(request):
     if request.method == 'POST':
         username = request.POST.get('username')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        mobile = request.POST.get('mobile')
+        address = request.POST.get('address')
 
-        if User.objects.filter(username=username).exists():
-            return HttpResponse("Username already exists")
+        # 🔴 Duplicate mobile check
+        if User.objects.filter(mobile=mobile).exists():
+            return redirect('/auth?mode=signup&error=duplicate')
 
         User.objects.create(
             username=username,
-            password=request.POST.get('password'),
-            email=request.POST.get('email'),
-            mobile=request.POST.get('mobile'),
-            address=request.POST.get('address')
+            password=password,
+            email=email,
+            mobile=mobile,
+            address=address
         )
 
-        return redirect('/auth?mode=signin')
+        return redirect('/auth?success=1')
 
     return redirect('/auth?mode=signup')
+
+
 
     
 def open_add_restaurant(request):
@@ -194,57 +219,67 @@ def show_cart(request, username):
 
     return render(request, 'cart.html',{"itemList" : items, "total_price" : total_price, "username":username})
 
+from django.shortcuts import render, get_object_or_404
+from django.conf import settings
+import razorpay
+
+from .models import User, Cart
+
+
 def checkout(request, username):
-    # Fetch customer and their cart
+    # 1️⃣ Get user
     customer = get_object_or_404(User, username=username)
+
+    # 2️⃣ Get cart
     cart = Cart.objects.filter(customer=customer).first()
-    cart_items = cart.items.all() if cart else []
-    total_price = cart.total_price() if cart else 0
 
-    if total_price == 0:
+    if not cart or cart.items.count() == 0:
         return render(request, 'checkout.html', {
-            'error': 'Your cart is empty!',
+            'username': username,
+            'cart_items': [],
+            'total_price': 0,
+            'error': 'Your cart is empty!'
         })
-    
-    # Initialize Razorpay client
-    client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
 
-    # Create Razorpay order
-    order_data = {
-        'amount': int(total_price * 100),  # Amount in paisa
-        'currency': 'INR',
-        'payment_capture': '1',  # Automatically capture payment
-    }
-    order = client.order.create(data=order_data)
+    cart_items = cart.items.all()
+    total_price = cart.total_price()  # MUST return number (int/float)
 
-    # Pass the order details to the frontend
+    # 3️⃣ Razorpay client (TEST MODE)
+    client = razorpay.Client(
+        auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET)
+    )
+
+    # 4️⃣ Create Razorpay Order
+    order = client.order.create({
+        "amount": int(total_price * 100),  # amount in paise
+        "currency": "INR",
+        "payment_capture": 1
+    })
+
+    # 5️⃣ Send data to template
     return render(request, 'checkout.html', {
         'username': username,
         'cart_items': cart_items,
         'total_price': total_price,
         'razorpay_key_id': settings.RAZORPAY_KEY_ID,
-        'order_id': order['id'],  # Razorpay order ID
-        'amount': total_price,
+        'order_id': order['id'],
     })
+
 
 def orders(request, username):
     customer = get_object_or_404(User, username=username)
     cart = Cart.objects.filter(customer=customer).first()
 
-    # Fetch cart items and total price before clearing the cart
     cart_items = cart.items.all() if cart else []
     total_price = cart.total_price() if cart else 0
-
-    # Clear the cart after fetching its details
-    if cart:
-        cart.items.clear()
 
     return render(request, 'orders.html', {
         'username': username,
         'customer': customer,
         'cart_items': cart_items,
-        'total_price': total_price,
+        'total_price': total_price
     })
+
 
 #------------------------
 def open_update_item(request, item_id):
@@ -270,3 +305,26 @@ def delete_item(request, item_id):
     restaurant_id = item.restaurant.id
     item.delete()
     return redirect('open_update_menu', restaurant_id=restaurant_id)
+
+
+from django.shortcuts import redirect, get_object_or_404
+from .models import Cart, Item, User
+
+def remove_from_cart(request, item_id, username):
+    if request.method == "POST":
+        customer = get_object_or_404(User, username=username)
+        cart = get_object_or_404(Cart, customer=customer)
+        item = get_object_or_404(Item, id=item_id)
+
+        cart.items.remove(item)  
+
+    return redirect('show_cart', username=username)
+
+def clear_cart(request, username):
+    customer = get_object_or_404(User, username=username)
+    cart = Cart.objects.filter(customer=customer).first()
+
+    if cart:
+        cart.items.clear()
+
+    return redirect('/')

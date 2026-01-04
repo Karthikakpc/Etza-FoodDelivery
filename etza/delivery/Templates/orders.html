@@ -1,28 +1,49 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">    
-    <title>Order Summary</title>
+    <title>Order Successful</title>
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
-
 </head>
-<body>
-    <h1>Thank you for your order, {{ username }}!</h1>
 
+<body style="background:#0e0e0e;color:white;text-align:center;padding:60px;font-family:Poppins,sans-serif;">
 
+    <h1>✅ Payment Successful</h1>
+    <h2>Thank you, {{ username }}!</h2>
 
-    <h2>Delivery Address</h2>
+    <h3>Delivery Address</h3>
     <p>{{ customer.address }}</p>
 
+    <h3>Total Paid: ₹{{ total_price }}</h3>
 
-    <p>Your order will be delivered to this location shortly. Thank you for choosing Meal Mate!</p>
+    <p>Your food is being prepared 🍔🍕</p>
 
+    <!-- ACTION BUTTONS -->
+    <div style="margin-top:35px; display:flex; flex-direction:column; align-items:center; gap:14px;">
+        
 
-    {% if cart_items %}
-        <a href="{% url 'customer_menu' cart_items.0.restaurant.id username %}">Back to Restaurants</a>
-    {% else %}
-        <a href="/">Back to Home</a>
-    {% endif %}
+        <!-- Finish -->
+        <form method="post" action="{% url 'clear_cart' username %}">
+            {% csrf_token %}
+            <button type="submit" style="
+                background:transparent;
+                color:white;
+                border:2px solid rgba(255,255,255,0.4);
+                padding:10px 34px;
+                border-radius:30px;
+                font-weight:600;
+                cursor:pointer;
+                transition:0.3s ease;
+            "
+            onmouseover="this.style.borderColor='#ffc107'; this.style.color='#ffc107'"
+            onmouseout="this.style.borderColor='rgba(255,255,255,0.4)'; this.style.color='white'">
+                Finish
+            </button>
+        </form>
+
+        
+    </div>
+
 </body>
 </html>

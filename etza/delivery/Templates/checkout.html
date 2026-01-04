@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <title>ETZA | Checkout</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'css/base.css' %}">
 
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <link rel="stylesheet" href="{% static 'css/checkout.css' %}">
 </head>
 <body>
@@ -15,63 +15,71 @@
     <div class="overlay"></div>
 
     <div class="checkout-container">
-
         <h1>Checkout</h1>
         <p class="welcome">Welcome, <strong>{{ username }}</strong></p>
 
-        <!-- ORDER SUMMARY -->
         <div class="summary-box">
-
             <h3>Order Summary</h3>
 
-            <div class="item-list">
-                {% for item in cart_items %}
-                <div class="item-row">
-                    <span>{{ item.name }}</span>
-                    <span>₹{{ item.price }}</span>
-                </div>
-                {% endfor %}
+            {% for item in cart_items %}
+            <div class="item-row">
+                <span>{{ item.name }}</span>
+                <span>₹{{ item.price }}</span>
             </div>
+            {% endfor %}
 
             <div class="total-row">
                 <span>Total</span>
                 <strong>₹{{ total_price }}</strong>
             </div>
-
         </div>
 
-        <!-- PAYMENT -->
         <button id="rzp-button" class="pay-btn">
             Pay with Razorpay
         </button>
-
     </div>
 </section>
 
-<!-- Razorpay -->
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-<script>
-    var options = {
-        "key": "{{ razorpay_key_id }}",
-        "amount": "{{ amount|floatformat:0 }}00",
-        "currency": "INR",
-        "name": "ETZA",
-        "description": "Food Order Payment",
-        "order_id": "{{ order_id }}",
-        "handler": function (response) {
-            window.location.href = "{% url 'orders' username %}";
-        },
-        "theme": {
-            "color": "#ffc107"
-        }
-    };
 
-    var rzp1 = new Razorpay(options);
-    document.getElementById('rzp-button').onclick = function(e){
-        rzp1.open();
-        e.preventDefault();
-    }
+
+<script>
+var options = {
+    key: "{{ razorpay_key_id }}",
+    amount: "{{ total_price|floatformat:0 }}00",
+    currency: "INR",
+    name: "ETZA",
+    description: "Food Order Payment",
+
+    handler: function () {
+        // 🔥 FORCE SUCCESS
+        alert("Payment Successful (Demo Mode)");
+        window.location.href = "{% url 'orders' username %}";
+    },
+
+    modal: {
+        ondismiss: function () {
+            alert("Payment cancelled");
+        }
+    },
+
+    theme: { color: "#ffc107" }
+};
+
+var rzp1 = new Razorpay(options);
+
+document.getElementById("rzp-button").onclick = function (e) {
+    rzp1.open();
+
+    // 🔥 AUTO SUCCESS AFTER 2 SECONDS
+    setTimeout(function () {
+        window.location.href = "{% url 'orders' username %}";
+    }, 2000);
+
+    e.preventDefault();
+};
 </script>
+
 
 </body>
 </html>

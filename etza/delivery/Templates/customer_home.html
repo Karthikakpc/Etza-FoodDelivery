@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <title>ETZA | Restaurants</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'css/base.css' %}">
 
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <link rel="stylesheet" href="{% static 'css/customer_home.css' %}">
 </head>
 <body>
@@ -14,15 +14,18 @@
 <section class="restaurant-hero">
     <div class="overlay"></div>
 
-    <div class="container">
+    <!-- ✅ VIEW CART -->
+    <a href="{% url 'show_cart' username %}" class="view-cart-btn">
+        🛒 View Cart
+    </a>
 
+    <div class="container">
         <h2 class="page-title">Welcome {{ username }} 👋</h2>
         <p class="subtitle">Discover restaurants near you</p>
 
         <div class="restaurant-grid">
             {% for restaurant in restaurantList %}
             <div class="restaurant-card">
-
                 <div class="image-box">
                     <img src="{{ restaurant.picture }}" alt="{{ restaurant.name }}">
                 </div>
@@ -45,13 +48,9 @@
                         View Menu
                     </a>
                 </div>
-
             </div>
-            {% empty %}
-            <p style="color:white;">No restaurants available.</p>
             {% endfor %}
         </div>
-
     </div>
 </section>
 
