@@ -100,8 +100,9 @@ def add_restaurant(request):
         cuisine = request.POST.get('cuisine')
         rating = request.POST.get('rating')
 
+        # 🔴 Duplicate check
         if Restaurant.objects.filter(name=name).exists():
-            return HttpResponse("Duplicate restaurant!")
+            return redirect('/open_add_restaurant?error=duplicate')
 
         Restaurant.objects.create(
             name=name,
@@ -110,10 +111,10 @@ def add_restaurant(request):
             rating=rating,
         )
 
-        # ✅ Redirect with success flag
         return redirect('/open_add_restaurant?success=1')
 
-    return render(request, 'add_restaurant.html')
+    return redirect('/open_add_restaurant')
+
 
 def open_show_restaurant(request):
     restaurantList = Restaurant.objects.all()

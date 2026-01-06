@@ -71,6 +71,32 @@
     </div>
 </div>
 {% endif %}
-<script> function closeModal() { window.location.href = "{% url 'open_add_restaurant' %}"; } </script>
+
+{% if request.GET.error == "duplicate" %}
+<div class="modal-overlay">
+    <div class="modal-box">
+        <h2 style="color:red;">❌ Duplicate Restaurant</h2>
+        <p>This restaurant already exists.</p>
+
+        <div class="modal-actions">
+            <button onclick="closeError()" class="btn-secondary">
+                Close
+            </button>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+
+<script>
+function closeModal() {
+    window.location.href = "{% url 'open_add_restaurant' %}";
+}
+
+function closeError() {
+    window.location.href = "{% url 'open_add_restaurant' %}";
+}
+</script>
+
 </body>
 </html>
